@@ -9,29 +9,34 @@
 </head>
 
 <body>
-<h2>Genres</h2>
-<ul>
-  <% genres.forEach((genre) => { %>
-    <li><%= genre.genre_name %></li>
-  <% }) %>
-</ul>
+    <h2>Genres</h2>
+    <ul>
+        <% genres.forEach((genre)=> { %>
+            <li>
+                <%= genre.genre_name %>
+            </li>
+            <% }) %>
+    </ul>
     <h1>Games</h1>
 
-    <% if (games.length === 0) { %>
+    <% if (games.length===0) { %>
         <p>No games found.</p>
-    <% } else { %>
-        <ul>
-            <% games.forEach((game) => { %>
-                <li>
-                    <a href="/games/<%= game.id %>">
-                        <strong><%= game.title %></strong>
-                    </a>
-                    — $<%= game.price %>
-                    (stock: <%= game.stock %>)
-                </li>
-            <% }); %>
-        </ul>
-    <% } %>
+        <% } else { %>
+            <ul>
+                <% games.forEach((game)=> { %>
+                    <li>
+                        <a href="/games/<%= game.id %>">
+                            <strong>
+                                <%= game.title %>
+                            </strong>
+                        </a>
+                        — $<%= game.price %>
+                            (stock: <%= game.stock %>)
+                                <a href="/games/<%= game.id %>/edit">Edit</a>
+                    </li>
+                    <% }); %>
+            </ul>
+            <% } %>
 </body>
 
 </html>

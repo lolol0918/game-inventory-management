@@ -16,6 +16,6 @@ CREATE TABLE IF NOT EXISTS games (
   stock integer NOT NULL CHECK (stock >= 0),
   image_url text,
   publisher_id integer REFERENCES publishers (publisher_id),
-  genre_id integer REFERENCES genres (genre_id),
+  genre_id integer REFERENCES genres(genre_id) ON DELETE SET NULL,
   release_year integer
 );
