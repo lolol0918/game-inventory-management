@@ -1,0 +1,35 @@
+{
+  "name": "game-inventory-management",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon app.js",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lolol0918/game-inventory-management.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lolol0918/game-inventory-management/issues"
+  },
+  "homepage": "https://github.com/lolol0918/game-inventory-management#readme",
+  "dependencies": {
+    "dotenv": "^18.0.8",
+    "ejs": "^7.0.1",
+    "express": "^5.2.1",
+    "nodemon": "^3.1.14",
+    "pg": "^8.23.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.13.0",
+    "globals": "^17.13.0"
+  }
+}

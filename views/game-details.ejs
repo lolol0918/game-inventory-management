@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles.css">
+    <title>Game Detail</title>
+</head>
+
+<body>
+    <h1><%= game.title %></h1>
+
+    <% if (game.image_url) { %>
+        <img src="<%= game.image_url %>" alt="<%= game.title %>" width="300">
+    <% } %>
+
+    <ul>
+        <li><strong>Price:</strong> $<%= game.price %></li>
+        <li><strong>Stock:</strong> <%= game.stock %></li>
+        <li><strong>Release year:</strong> <%= game.release_year ?? "N/A" %></li>
+        <li><strong>Description:</strong> <%= game.description ?? "N/A" %></li>
+    </ul>
+
+    <a href="/games">Back to games</a>
+</body>
+
+</html>
+
