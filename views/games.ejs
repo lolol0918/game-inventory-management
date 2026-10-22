@@ -13,7 +13,9 @@
     <ul>
         <% genres.forEach((genre)=> { %>
             <li>
-                <%= genre.genre_name %>
+                <a href="/genres/<%= genre.genre_id %>">
+                    <%= genre.genre_name %>
+                </a>
             </li>
             <% }) %>
     </ul>
@@ -33,10 +35,23 @@
                         — $<%= game.price %>
                             (stock: <%= game.stock %>)
                                 <a href="/games/<%= game.id %>/edit">Edit</a>
+                            <% if (game.genres.length === 0) { %>
+                                <span>Genres: none</span>
+                            <% } else { %>
+                                <span>
+                                    Genres:
+                                    <% game.genres.forEach((genre, index)=> { %>
+                                        <a href="/genres/<%= genre.genre_id %>"><%= genre.genre_name %></a><%= index < game.genres.length - 1 ? "," : "" %>
+                                    <% }) %>
+                                </span>
+                            <% } %>
                     </li>
                     <% }); %>
             </ul>
             <% } %>
+
+    <p><a href="/games/new">Add a Game</a></p>
+    <p><a href="/genres">All genres</a></p>
 </body>
 
 </html>

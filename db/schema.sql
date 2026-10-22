@@ -16,6 +16,12 @@ CREATE TABLE IF NOT EXISTS games (
   stock integer NOT NULL CHECK (stock >= 0),
   image_url text,
   publisher_id integer REFERENCES publishers (publisher_id),
-  genre_id integer REFERENCES genres(genre_id) ON DELETE SET NULL,
   release_year integer
+);
+
+-- A game can have many genres and a genre can belong to many games.
+CREATE TABLE IF NOT EXISTS game_genres (
+  game_id integer NOT NULL REFERENCES games (id) ON DELETE CASCADE,
+  genre_id integer NOT NULL REFERENCES genres (genre_id) ON DELETE CASCADE,
+  PRIMARY KEY (game_id, genre_id)
 );

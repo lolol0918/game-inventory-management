@@ -20,10 +20,20 @@
         <li><strong>Stock:</strong> <%= game.stock %></li>
         <li><strong>Release year:</strong> <%= game.release_year ?? "N/A" %></li>
         <li><strong>Description:</strong> <%= game.description ?? "N/A" %></li>
+        <li>
+            <strong>Genres:</strong>
+            <% if (genres.length === 0) { %>
+                N/A
+            <% } else { %>
+                <% genres.forEach((genre, index)=> { %>
+                    <a href="/genres/<%= genre.genre_id %>"><%= genre.genre_name %></a><%= index < genres.length - 1 ? "," : "" %>
+                <% }) %>
+            <% } %>
+        </li>
     </ul>
 
-    <a href="/games">Back to games</a>
+    <p><a href="/games/<%= game.id %>/edit">Edit</a></p>
+    <p><a href="/games">Back to games</a></p>
 </body>
 
 </html>
-

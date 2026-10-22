@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= genre.genre_name %>
+    </title>
+</head>
+
+<body>
+    <h1>
+        <%= genre.genre_name %>
+    </h1>
+
+    <h2>Games in this genre</h2>
+
+    <% if (games.length===0) { %>
+        <p>No games found in this genre.</p>
+        <% } else { %>
+            <ul>
+                <% games.forEach((game)=> { %>
+                    <li>
+                        <a href="/games/<%= game.id %>">
+                            <%= game.title %>
+                        </a>
+                        — $<%= game.price %>
+                    </li>
+                    <% }) %>
+            </ul>
+            <% } %>
+
+                <a href="/genres">Back to genres</a>
+</body>
+
+</html>
