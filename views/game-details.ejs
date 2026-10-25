@@ -4,37 +4,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/styles.css">
+    <%- include("partials/head") %>
     <title>Game Detail</title>
 </head>
 
 <body>
-    <h1><%= game.title %></h1>
+    <%- include("partials/header") %>
+        <main>
+            <h1>
+                <%= game.title %>
+            </h1>
 
-    <% if (game.image_url) { %>
-        <img src="<%= game.image_url %>" alt="<%= game.title %>" width="300">
-    <% } %>
-
-    <ul>
-        <li><strong>Price:</strong> $<%= game.price %></li>
-        <li><strong>Stock:</strong> <%= game.stock %></li>
-        <li><strong>Rating:</strong> <%= game.rating ?? "N/A" %></li>
-        <li><strong>Release year:</strong> <%= game.release_year ?? "N/A" %></li>
-        <li><strong>Description:</strong> <%= game.description ?? "N/A" %></li>
-        <li>
-            <strong>Genres:</strong>
-            <% if (genres.length === 0) { %>
-                N/A
-            <% } else { %>
-                <% genres.forEach((genre, index)=> { %>
-                    <a href="/genres/<%= genre.genre_id %>"><%= genre.genre_name %></a><%= index < genres.length - 1 ? "," : "" %>
-                <% }) %>
+            <% if (game.image_url) { %>
+                <img class="game-detail-image" src="<%= game.image_url %>" alt="<%= game.title %>"
+                    onerror="this.style.display='none';">
             <% } %>
-        </li>
-    </ul>
 
-    <p><a href="/games/<%= game.id %>/edit">Edit</a></p>
-    <p><a href="/games">Back to games</a></p>
+            <ul>
+                <li><strong>Price:</strong> $<%= game.price %>
+                </li>
+                <li><strong>Stock:</strong>
+                    <%= game.stock %>
+                </li>
+                <li><strong>Rating:</strong>
+                    <%= game.rating ?? "N/A" %>
+                </li>
+                <li><strong>Publisher:</strong>
+                    <%= game.publisher_name ?? "N/A" %>
+                </li>
+                <li><strong>Release year:</strong>
+                    <%= game.release_year ?? "N/A" %>
+                </li>
+                <li><strong>Description:</strong>
+                    <%= game.description ?? "N/A" %>
+                </li>
+                <li>
+                    <strong>Genres:</strong>
+                    <% if (genres.length===0) { %>
+                        N/A
+                    <% } else { %>
+                        <% genres.forEach((genre, index)=> { %>
+                            <a href="/genres/<%= genre.genre_id %>">
+                                <%= genre.genre_name %>
+                            </a>
+                            <%= index < genres.length - 1 ? "," : "" %>
+                        <% }) %>
+                    <% } %>
+                </li>
+            </ul>
+
+            <p><a href="/games/<%= game.id %>/edit">Edit</a></p>
+            <p><a href="/games">Back to games</a></p>
+        </main>
 </body>
 
 </html>

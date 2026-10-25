@@ -4,34 +4,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <%- include("partials/head") %>
     <title>
         <%= genre.genre_name %>
     </title>
 </head>
 
 <body>
-    <h1>
-        <%= genre.genre_name %>
-    </h1>
+    <%- include("partials/header") %>
+        <main>
+            <h1>
+                <%= genre.genre_name %>
+            </h1>
+            <p><a href="/genres">Back to genres</a></p>
 
-    <h2>Games in this genre</h2>
+            <h2>Games in this genre</h2>
 
-    <% if (games.length===0) { %>
-        <p>No games found in this genre.</p>
-        <% } else { %>
-            <ul>
-                <% games.forEach((game)=> { %>
-                    <li>
-                        <a href="/games/<%= game.id %>">
-                            <%= game.title %>
-                        </a>
-                        — $<%= game.price %>
-                    </li>
+            <% if (games.length===0) { %>
+                <p>No games found in this genre.</p>
+            <% } else { %>
+                <div class="game-grid">
+                    <% games.forEach((game)=> { %>
+                        <article class="game-card">
+                            <a class="game-card-link" href="/games/<%= game.id %>">
+                                <div class="game-card-media">
+                                    <% if (game.image_url) { %>
+                                        <img src="<%= game.image_url %>" alt="<%= game.title %>" loading="lazy"
+                                            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                        <div class="game-card-fallback" style="display:none;"><%= game.title %></div>
+                                    <% } else { %>
+                                        <div class="game-card-fallback"><%= game.title %></div>
+                                    <% } %>
+                                </div>
+                                <div class="game-card-body">
+                                    <h3><%= game.title %></h3>
+                                    <% if (game.price !== null && game.price !== undefined && game.price !== '') { %>
+                                        <div class="price">$<%= game.price %></div>
+                                    <% } %>
+                                    <% if (game.rating !== null && game.rating !== undefined && game.rating !== '') { %>
+                                        <div class="meta">Rating: <%= game.rating %></div>
+                                    <% } %>
+                                    <div class="meta">Stock: <%= game.stock %></div>
+                                </div>
+                            </a>
+                            <div class="game-card-actions">
+                                <a class="button" href="/games/<%= game.id %>/edit">Edit</a>
+                                <form action="/games/<%= game.id %>/delete" method="POST"
+                                    onsubmit="return confirm('Are you sure you want to delete this game?')">
+                                    <button type="submit">Delete</button>
+                                </form>
+                            </div>
+                        </article>
                     <% }) %>
-            </ul>
+                </div>
             <% } %>
 
-                <a href="/genres">Back to genres</a>
+        </main>
 </body>
 
 </html>

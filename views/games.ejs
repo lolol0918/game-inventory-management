@@ -4,54 +4,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/styles.css">
+    <%- include("partials/head") %>
     <title>Games</title>
 </head>
 
 <body>
-    <h2>Genres</h2>
-    <ul>
-        <% genres.forEach((genre)=> { %>
-            <li>
-                <a href="/genres/<%= genre.genre_id %>">
-                    <%= genre.genre_name %>
-                </a>
-            </li>
-            <% }) %>
-    </ul>
-    <h1>Games</h1>
+    <%- include("partials/header") %>
+    <main>
+        <section class="hero" style="padding: 3rem 0 2rem;">
+            <p class="eyebrow">YOUR COLLECTION</p>
+            <h1>Game Library</h1>
+            <p>Browse, manage, and organize your games.</p>
+            <a class="button" href="/games/new">Add a Game</a>
+        </section>
 
-    <% if (games.length===0) { %>
-        <p>No games found.</p>
-        <% } else { %>
-            <ul>
-                <% games.forEach((game)=> { %>
-                    <li>
-                        <a href="/games/<%= game.id %>">
-                            <strong>
-                                <%= game.title %>
-                            </strong>
-                        </a>
-                        — $<%= game.price %>
-                            (stock: <%= game.stock %>)
-                                <a href="/games/<%= game.id %>/edit">Edit</a>
-                            <% if (game.genres.length === 0) { %>
-                                <span>Genres: none</span>
-                            <% } else { %>
-                                <span>
-                                    Genres:
-                                    <% game.genres.forEach((genre, index)=> { %>
-                                        <a href="/genres/<%= genre.genre_id %>"><%= genre.genre_name %></a><%= index < game.genres.length - 1 ? "," : "" %>
-                                    <% }) %>
-                                </span>
-                            <% } %>
-                    </li>
-                    <% }); %>
-            </ul>
+        <section class="library">
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">ALL GAMES</p>
+                    <h2><%= games.length %> game<%= games.length === 1 ? '' : 's' %></h2>
+                </div>
+                <div style="display:flex; gap:1rem; flex-wrap:wrap;">
+                    <a href="/genres">Manage Genres</a>
+                    <a href="/publishers">Manage Publishers</a>
+                </div>
+            </div>
+
+            <% if (genres && genres.length > 0) { %>
+                <h3>Genres</h3>
+                <ul class="genre-chips">
+                    <% genres.forEach((genre) => { %>
+                        <li>
+                            <a class="genre-chip" href="/genres/<%= genre.genre_id %>">
+                                <%= genre.genre_name %>
+                            </a>
+                        </li>
+                    <% }) %>
+                </ul>
             <% } %>
 
-    <p><a href="/games/new">Add a Game</a></p>
-    <p><a href="/genres">All genres</a></p>
+            <% if (games.length === 0) { %>
+                <p>No games found.</p>
+            <% } else { %>
+                <div class="game-grid">
+                    <% games.forEach((game) => { %>
+                        <article class="game-card">
+                            <a class="game-card-link" href="/games/<%= game.id %>">
+                                <div class="game-card-media">
+                                    <% if (game.image_url) { %>
+                                        <img src="<%= game.image_url %>" alt="<%= game.title %>" loading="lazy"
+                                            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                        <div class="game-card-fallback" style="display:none;"><%= game.title %></div>
+                                    <% } else { %>
+                                        <div class="game-card-fallback"><%= game.title %></div>
+                                    <% } %>
+                                </div>
+                                <div class="game-card-body">
+                                    <h3><%= game.title %></h3>
+                                    <% if (game.genres && game.genres.length > 0) { %>
+                                        <div class="meta">Genres: <%= game.genres.map(g => g.genre_name).join(', ') %></div>
+                                    <% } else { %>
+                                        <div class="meta">Genres: none</div>
+                                    <% } %>
+                                    <% if (game.rating !== null && game.rating !== undefined && game.rating !== '') { %>
+                                        <div class="meta">Rating: <%= game.rating %></div>
+                                    <% } %>
+                                    <% if (game.price !== null && game.price !== undefined && game.price !== '') { %>
+                                        <div class="price">$<%= game.price %></div>
+                                    <% } %>
+                                    <div class="meta">Stock: <%= game.stock %></div>
+                                    <% if (game.publisher_name) { %>
+                                        <div class="meta"><%= game.publisher_name %></div>
+                                    <% } %>
+                                </div>
+                            </a>
+                            <div class="game-card-actions">
+                                <a class="button" href="/games/<%= game.id %>/edit">Edit</a>
+                                <form action="/games/<%= game.id %>/delete" method="POST"
+                                    onsubmit="return confirm('Are you sure you want to delete this game?')">
+                                    <button type="submit">Delete</button>
+                                </form>
+                            </div>
+                        </article>
+                    <% }); %>
+                </div>
+            <% } %>
+        </section>
+    </main>
 </body>
 
 </html>

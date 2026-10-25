@@ -4,39 +4,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/styles.css">
+    <%- include("partials/head") %>
     <title>Genres</title>
 </head>
 
 <body>
-    <h1>Genres</h1>
+    <%- include("partials/header") %>
+        <main>
+            <h1>Genres</h1>
 
-    <h2>Add a Genre</h2>
-    <form action="/genres/new" method="POST">
-        <label for="genre_name">Genre name:</label>
-        <input type="text" id="genre_name" name="genre_name" maxlength="50" required>
-        <button type="submit">Add Genre</button>
-    </form>
+            <h2>Add a Genre</h2>
+            <form action="/genres/new" method="POST">
+                <label for="genre_name">Genre name:</label>
+                <input type="text" id="genre_name" name="genre_name" maxlength="50" required>
+                <button type="submit">Add Genre</button>
+            </form>
 
-    <p><a href="/games">Back to games</a></p>
+            <p><a href="/games">Back to games</a></p>
 
-    <ul>
-        <% genres.forEach((genre)=> { %>
-            <li>
-                <a href="/genres/<%= genre.genre_id %>">
-                    <%= genre.genre_name %>
-                </a>
-                <form action="/genres/<%= genre.genre_id %>/edit" method="POST">
-                    <input type="text" name="genre_name" value="<%= genre.genre_name %>" maxlength="50" required>
-                    <button type="submit">Save</button>
-                </form>
-                <form action="/genres/<%= genre.genre_id %>/delete" method="POST"
-                    onsubmit="return confirm('Are you sure you want to delete this genre?')">
-                    <button type="submit">Delete</button>
-                </form>
-            </li>
-            <% }) %>
-    </ul>
+            <% if (genres && genres.length > 0) { %>
+                <ul class="genre-chips">
+                    <% genres.forEach((genre)=> { %>
+                        <li>
+                            <a class="genre-chip" href="/genres/<%= genre.genre_id %>">
+                                <%= genre.genre_name %>
+                            </a>
+                        </li>
+                    <% }) %>
+                </ul>
+            <% } %>
+
+            <ul class="genre-list">
+                <% genres.forEach((genre)=> { %>
+                    <li>
+                        <a class="genre-name" href="/genres/<%= genre.genre_id %>">
+                            <%= genre.genre_name %>
+                        </a>
+                        <div class="genre-actions">
+                            <form action="/genres/<%= genre.genre_id %>/edit" method="POST">
+                                <input type="text" name="genre_name" value="<%= genre.genre_name %>" maxlength="50" required>
+                                <button type="submit">Save</button>
+                            </form>
+                            <form action="/genres/<%= genre.genre_id %>/delete" method="POST"
+                                onsubmit="return confirm('Are you sure you want to delete this genre?')">
+                                <button type="submit">Delete</button>
+                            </form>
+                        </div>
+                    </li>
+                <% }) %>
+            </ul>
+        </main>
 </body>
 
 </html>

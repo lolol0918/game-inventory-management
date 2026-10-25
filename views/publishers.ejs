@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <%- include("partials/head") %>
+    <title>Publishers</title>
+</head>
+
+<body>
+    <%- include("partials/header") %>
+    <main>
+        <h1>Publishers</h1>
+
+        <h2>Add a Publisher</h2>
+        <form action="/publishers/new" method="POST">
+            <label for="publisher_name">Publisher name:</label>
+            <input type="text" id="publisher_name" name="publisher_name" maxlength="100" required>
+            <button type="submit">Add Publisher</button>
+        </form>
+
+        <p><a href="/games">Back to games</a></p>
+
+        <% if (publishers && publishers.length > 0) { %>
+            <ul class="genre-list">
+                <% publishers.forEach((publisher) => { %>
+                    <li>
+                        <span class="genre-name"><%= publisher.publisher_name %></span>
+                        <div class="genre-actions">
+                            <form action="/publishers/<%= publisher.publisher_id %>/edit" method="POST">
+                                <input type="text" name="publisher_name" value="<%= publisher.publisher_name %>" maxlength="100" required>
+                                <button type="submit">Save</button>
+                            </form>
+                            <form action="/publishers/<%= publisher.publisher_id %>/delete" method="POST"
+                                onsubmit="return confirm('Are you sure you want to delete this publisher?')">
+                                <button type="submit">Delete</button>
+                            </form>
+                        </div>
+                    </li>
+                <% }) %>
+            </ul>
+        <% } else { %>
+            <p>No publishers yet.</p>
+        <% } %>
+    </main>
+</body>
+
+</html>

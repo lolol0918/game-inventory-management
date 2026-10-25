@@ -36,7 +36,12 @@ function groupGenresByGame(rows) {
 
 async function getAllGames(req, res, next) {
   try {
-    const gamesResult = await pool.query("SELECT * FROM games ORDER BY id");
+    const gamesResult = await pool.query(
+      `SELECT g.*, p.publisher_name
+       FROM games g
+       LEFT JOIN publishers p ON p.publisher_id = g.publisher_id
+       ORDER BY g.id`
+    );
     const genresResult = await pool.query(
       "SELECT * FROM genres ORDER BY genre_name"
     );
@@ -65,7 +70,13 @@ async function getAllGames(req, res, next) {
 async function getGameById(req, res, next) {
   try {
     const { id } = req.params;
-    const result = await pool.query("SELECT * FROM games WHERE id = $1", [id]);
+    const result = await pool.query(
+      `SELECT g.*, p.publisher_name
+       FROM games g
+       LEFT JOIN publishers p ON p.publisher_id = g.publisher_id
+       WHERE g.id = $1`,
+      [id]
+    );
 
     if (result.rows.length == 0) {
       return res.status(404).json({ error: "Game not found" });
@@ -94,10 +105,14 @@ async function getNewGameForm(req, res, next) {
     const genresResult = await pool.query(
       "SELECT * FROM genres ORDER BY genre_name"
     );
+    const publishersResult = await pool.query(
+      "SELECT * FROM publishers ORDER BY publisher_name"
+    );
 
     res.render("game-form", {
       game: null,
       genres: genresResult.rows,
+      publishers: publishersResult.rows,
       selectedGenreIds: [],
     });
   } catch (err) {
@@ -200,6 +215,9 @@ async function getEditGameForm(req, res, next) {
     const genresResult = await pool.query(
       "SELECT * FROM genres ORDER BY genre_name"
     );
+    const publishersResult = await pool.query(
+      "SELECT * FROM publishers ORDER BY publisher_name"
+    );
 
     const selectedGenresResult = await pool.query(
       "SELECT genre_id FROM game_genres WHERE game_id = $1",
@@ -213,6 +231,7 @@ async function getEditGameForm(req, res, next) {
     res.render("game-form", {
       game: gameResult.rows[0],
       genres: genresResult.rows,
+      publishers: publishersResult.rows,
       selectedGenreIds,
     });
   } catch (err) {
@@ -308,6 +327,69 @@ async function updateGame(req, res, next) {
   }
 }
 
+async function getHome(req, res, next) {
+  try {
+    const gamesResult = await pool.query(
+      `SELECT g.*, p.publisher_name
+       FROM games g
+       LEFT JOIN publishers p ON p.publisher_id = g.publisher_id
+       ORDER BY g.id
+       LIMIT 12`
+    );
+    const gameGenresResult = await pool.query(
+      `SELECT gg.game_id, g.genre_id, g.genre_name
+       FROM game_genres gg
+       JOIN genres g ON g.genre_id = gg.genre_id
+       ORDER BY g.genre_name`
+    );
+
+    const genresByGame = groupGenresByGame(gameGenresResult.rows);
+
+    const games = gamesResult.rows.map((game) => ({
+      ...game,
+      genres: genresByGame.get(game.id) || [],
+    }));
+
+    res.render("index", { games });
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function deleteGame(req, res, next) {
+  let client;
+
+  try {
+    const { id } = req.params;
+
+    client = await pool.connect();
+    await client.query("BEGIN");
+    await client.query("DELETE FROM game_genres WHERE game_id = $1", [id]);
+    const result = await client.query("DELETE FROM games WHERE id = $1 RETURNING id", [id]);
+
+    if (result.rows.length === 0) {
+      await client.query("ROLLBACK");
+      return res.status(404).send("Game not found");
+    }
+
+    await client.query("COMMIT");
+    res.redirect("/games");
+  } catch (err) {
+    if (client) {
+      try {
+        await client.query("ROLLBACK");
+      } catch (rollbackErr) {
+        console.error("Rollback failed:", rollbackErr);
+      }
+    }
+    next(err);
+  } finally {
+    if (client) {
+      client.release();
+    }
+  }
+}
+
 module.exports = {
   getAllGames,
   getGameById,
@@ -315,4 +397,6 @@ module.exports = {
   createGame,
   getEditGameForm,
   updateGame,
+  deleteGame,
+  getHome,
 };
