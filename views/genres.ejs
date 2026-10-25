@@ -11,18 +11,28 @@
 <body>
     <h1>Genres</h1>
 
+    <h2>Add a Genre</h2>
+    <form action="/genres/new" method="POST">
+        <label for="genre_name">Genre name:</label>
+        <input type="text" id="genre_name" name="genre_name" maxlength="50" required>
+        <button type="submit">Add Genre</button>
+    </form>
+
+    <p><a href="/games">Back to games</a></p>
+
     <ul>
         <% genres.forEach((genre)=> { %>
             <li>
                 <a href="/genres/<%= genre.genre_id %>">
                     <%= genre.genre_name %>
                 </a>
+                <form action="/genres/<%= genre.genre_id %>/edit" method="POST">
+                    <input type="text" name="genre_name" value="<%= genre.genre_name %>" maxlength="50" required>
+                    <button type="submit">Save</button>
+                </form>
             </li>
             <% }) %>
     </ul>
-
-    <p><a href="/genres/new">Add a Genre</a></p>
-    <p><a href="/games">Back to games</a></p>
 </body>
 
 </html>
