@@ -118,9 +118,12 @@ async function createGame(req, res, next) {
       publisher_id,
       genre_ids,
       release_year,
+      rating,
     } = req.body;
 
     const genreIds = parseGenreIds(genre_ids);
+    const ratingValue =
+      rating === undefined || rating === null || rating === "" ? null : rating;
 
     client = await pool.connect();
 
@@ -134,9 +137,10 @@ async function createGame(req, res, next) {
         stock,
         image_url,
         publisher_id,
-        release_year
+        release_year,
+        rating
       )
-      VALUES ($1, $2, $3, $4, $5, $6, $7)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
       RETURNING id`,
       [
         title,
@@ -146,6 +150,7 @@ async function createGame(req, res, next) {
         image_url || null,
         publisher_id || null,
         release_year || null,
+        ratingValue,
       ]
     );
 
@@ -230,9 +235,12 @@ async function updateGame(req, res, next) {
       publisher_id,
       genre_ids,
       release_year,
+      rating,
     } = req.body;
 
     const genreIds = parseGenreIds(genre_ids);
+    const ratingValue =
+      rating === undefined || rating === null || rating === "" ? null : rating;
 
     client = await pool.connect();
 
@@ -246,8 +254,9 @@ async function updateGame(req, res, next) {
         stock = $4,
         image_url = $5,
         publisher_id = $6,
-        release_year = $7
-      WHERE id = $8
+        release_year = $7,
+        rating = $8
+      WHERE id = $9
       RETURNING id`,
       [
         title,
@@ -257,6 +266,7 @@ async function updateGame(req, res, next) {
         image_url || null,
         publisher_id || null,
         release_year || null,
+        ratingValue,
         id,
       ]
     );

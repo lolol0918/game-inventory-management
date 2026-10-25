@@ -43,9 +43,9 @@ async function getGenreById(req, res, next) {
   }
 }
 
-function getNewGenreForm(req, res) {
-  res.render("genre-form");
-}
+// function getNewGenreForm(req, res) {
+//   res.render("genre-form");
+// }
 
 async function createGenre(req, res, next) {
   try {
@@ -62,9 +62,53 @@ async function createGenre(req, res, next) {
   }
 }
 
+async function deleteGenre(req, res, next) {
+  try {
+    const { id } = req.params;
+
+    await pool.query("DELETE FROM genres WHERE genre_id = $1", [id]);
+
+    res.redirect("/genres");
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function editGenre(req, res, next) {
+  try {
+    const { id } = req.params;
+    const { genre_name } = req.body;
+
+    if (!genre_name || genre_name.trim() === "") {
+      return res.redirect("/genres");
+    }
+
+    await pool.query("UPDATE genres SET genre_name = $1 WHERE genre_id = $2", [
+      genre_name.trim(),
+      id,
+    ]);
+
+    res.redirect(`/genres/${id}`);
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function deleteGenre(req, res, next) {
+  try {
+    const { id } = req.params;
+    await pool.query("DELETE FROM genres WHERE genre_id = $1", [id]);
+    res.redirect("/genres");
+  } catch (err) {
+    next(err);
+  }
+}
+
 module.exports = {
   getAllGenres,
   getGenreById,
-  getNewGenreForm,
+  // getNewGenreForm,
   createGenre,
+  editGenre,
+  deleteGenre,
 };

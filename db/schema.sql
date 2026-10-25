@@ -16,7 +16,8 @@ CREATE TABLE IF NOT EXISTS games (
   stock integer NOT NULL CHECK (stock >= 0),
   image_url text,
   publisher_id integer REFERENCES publishers (publisher_id),
-  release_year integer
+  release_year integer,
+  rating numeric(2, 1) CHECK (rating >= 1 AND rating <= 10)
 );
 
 -- A game can have many genres and a genre can belong to many games.
