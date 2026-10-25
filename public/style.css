@@ -630,39 +630,39 @@ main>p>a:hover {
     }
 }
 
-    .genre-list li {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .genre-list .genre-actions {
-        margin-left: 0;
-        width: 100%;
-    }
-
-    .genre-list .genre-actions form {
-        width: 100%;
-    }
-
-    .genre-list .genre-actions input {
-        flex: 1;
-        min-width: 0;
-    }
+.genre-list li {
+    flex-direction: column;
+    align-items: flex-start;
 }
 
-    .hero {
-        padding: 2.5rem 0 2rem;
-    }
-
-    .section-heading {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    li>strong:first-child {
-        min-width: 100%;
-    }
+.genre-list .genre-actions {
+    margin-left: 0;
+    width: 100%;
 }
+
+.genre-list .genre-actions form {
+    width: 100%;
+}
+
+.genre-list .genre-actions input {
+    flex: 1;
+    min-width: 0;
+}
+
+
+.hero {
+    padding: 2.5rem 0 2rem;
+}
+
+.section-heading {
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+li>strong:first-child {
+    min-width: 100%;
+}
+
 
 @media (prefers-reduced-motion: reduce) {
     html {
