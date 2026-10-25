@@ -56,9 +56,7 @@ async function createGenre(req, res, next) {
       [genre_name]
     );
 
-    const newGenre = result.rows[0];
-
-    res.redirect(`/genres/${newGenre.genre_id}`);
+    res.redirect("/genres");
   } catch (err) {
     next(err);
   }
